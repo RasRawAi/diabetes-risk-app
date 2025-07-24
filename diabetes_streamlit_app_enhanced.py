@@ -50,13 +50,23 @@ with st.form("diabetes_form"):
 
 # Prediction logic
 if submitted:
-    features = np.array([[highbp, highchol, 1, bmi, smoker, 0, 0, phys_activity, 1, 1,
-                          0, 1, 0, genhlth, 0, 0, 0, 0, 0, age, 5, 6]])
-    risk = model.predict_proba(features)[0][1]
+    feature_names = [
+        'HighBP', 'HighChol', 'CholCheck', 'BMI', 'Smoker', 'Stroke',
+        'HeartDiseaseorAttack', 'PhysActivity', 'Fruits', 'Veggies',
+        'HvyAlcoholConsump', 'AnyHealthcare', 'NoDocbcCost', 'GenHlth',
+        'MentHlth', 'PhysHlth', 'DiffWalk', 'Sex', 'Age', 'Education', 'Income'
+    ]
+
+    input_df = pd.DataFrame([[
+        highbp, highchol, 1, bmi, smoker, 0, 0, phys_activity, 1, 1,
+        0, 1, 0, genhlth, 0, 0, 0, 0, age, 5, 6
+    ]], columns=feature_names)
+
+    risk = model.predict_proba(input_df)[0][1]
 
     st.subheader("Prediction Result")
     st.metric(label="Predicted Diabetes Risk Score", value=f"{risk:.2f}")
-    
+
     if risk > 0.5:
         st.warning("⚠️ High Risk – It is advisable to consult a healthcare provider.")
     else:
